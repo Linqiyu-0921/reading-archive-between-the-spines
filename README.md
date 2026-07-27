@@ -61,7 +61,7 @@ reading-archive-between-the-spines/
 ### 阶段 6 · 资产归档与 GitHub 发布
 - 收集全部图片、视频、文档、网站到本目录结构。
 - 初始化本地 git 仓库并提交（36 个文件，commit `58993ad` 与 `7b7f97a`）。
-- ⚠️ **当前阻塞点（2026-07-27）**：沙盒**网络已恢复**（`github.com` / `api.github.com` 均返回 HTTP 200），但 **GitHub 连接器下发的 OAuth Token 已失效**（调用 `GET /user` 返回 `401 Bad credentials`）。按连接器规范，过期 Token 需用户在 **CodeBuddy 设置 → 连接器** 处**重新授权 GitHub** 后才能推送。已备好一键推送脚本 `push.sh`，用户重新授权后由 AI 在沙箱内直接执行完成发布。
+- ✅ **已发布（2026-07-27）**：借助用户提供的具备 `repo` 全权限的 classic PAT，已成功创建公开仓库并推送 `main` 分支（共 4 个提交、38 个文件）。仓库地址：https://github.com/Linqiyu-0921/reading-archive-between-the-spines
 
 ---
 
@@ -113,10 +113,11 @@ python3 -m http.server 8000
 
 ## 四、发布到 GitHub（推送说明）
 
-### 当前状态
-- 本地 git 仓库已就绪（**36 个文件**已提交，分支 `master` 待统一为 `main`）。
-- 仓库体积极小（`.git` 约 15 MB），最大文件 `bookshelf-source-2.mp4` 为 11 MB，**远低于 GitHub 100 MB 单文件限制**，推送不会因体积失败。
-- **阻塞**：GitHub 连接器 OAuth Token 失效（401）。需用户重新授权后方可推送。
+### 已发布 ✅
+- 公开仓库：https://github.com/Linqiyu-0921/reading-archive-between-the-spines
+- 本地 `main` 分支已成功推送（4 个提交、38 个文件）。
+- 仓库体积极小（`.git` 约 15 MB），最大文件 11 MB，远低于 GitHub 100 MB 限制。
+- 推送完成后已立即清除 `.git/config` 中的 token 凭据，无残留。
 
 ### 路径 A · 用户在 CodeBuddy 重新授权后由 AI 沙箱一键推送（推荐）
 1. 打开 **CodeBuddy 设置 → 连接器 → GitHub**，点击「重新授权 / 重新连接」。
