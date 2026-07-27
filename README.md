@@ -11,6 +11,7 @@
 ```
 reading-archive-between-the-spines/
 ├── README.md                       # 本文件（含完整任务记录）
+├── push.sh                         # 沙箱内一键推送脚本（重新授权后由 AI 执行）
 ├── site/
 │   ├── bookshelf.html              # 图书展示网站（核心作品）
 │   └── books.js                    # 网站数据（33 本书）
@@ -58,8 +59,8 @@ reading-archive-between-the-spines/
 
 ### 阶段 6 · 资产归档与 GitHub 发布
 - 收集全部图片、视频、文档、网站到本目录结构。
-- 初始化本地 git 仓库并提交（36 个文件，commit `58993ad`）。
-- ⚠️ **沙盒网络限制**：当前环境出站 HTTPS 被阻断（`curl` 至 `api.github.com`/`github.com` 均失败），无法在沙盒内直连 GitHub 执行 `git push` 或创建仓库。GitHub 端仓库**尚未创建**，请按下方「发布说明」在本地联网环境创建并推送。
+- 初始化本地 git 仓库并提交（36 个文件，commit `58993ad` 与 `7b7f97a`）。
+- ⚠️ **当前阻塞点（2026-07-27）**：沙盒**网络已恢复**（`github.com` / `api.github.com` 均返回 HTTP 200），但 **GitHub 连接器下发的 OAuth Token 已失效**（调用 `GET /user` 返回 `401 Bad credentials`）。按连接器规范，过期 Token 需用户在 **CodeBuddy 设置 → 连接器** 处**重新授权 GitHub** 后才能推送。已备好一键推送脚本 `push.sh`，用户重新授权后由 AI 在沙箱内直接执行完成发布。
 
 ---
 
@@ -111,23 +112,35 @@ python3 -m http.server 8000
 
 ## 四、发布到 GitHub（推送说明）
 
-当前沙盒无法直连 GitHub。本地仓库已 `git init` 并提交所有文件，请在**已联网且已登录 GitHub** 的机器上执行：
+### 当前状态
+- 本地 git 仓库已就绪（**36 个文件**已提交，分支 `master` 待统一为 `main`）。
+- 仓库体积极小（`.git` 约 15 MB），最大文件 `bookshelf-source-2.mp4` 为 11 MB，**远低于 GitHub 100 MB 单文件限制**，推送不会因体积失败。
+- **阻塞**：GitHub 连接器 OAuth Token 失效（401）。需用户重新授权后方可推送。
+
+### 路径 A · 用户在 CodeBuddy 重新授权后由 AI 沙箱一键推送（推荐）
+1. 打开 **CodeBuddy 设置 → 连接器 → GitHub**，点击「重新授权 / 重新连接」。
+2. 完成后回复「**已重新授权**」。
+3. AI 在沙箱执行 `bash push.sh`：自动获取新 Token → 创建公开仓库 `reading-archive-between-the-spines` → 推送 `main` 分支。
+4. 返回仓库地址 `https://github.com/<你的用户名>/reading-archive-between-the-spines`。
+
+### 路径 B · 用户本地推送（无需重新授权）
+下载本目录（或 `/workspace/reading-archive-between-the-spines.zip` 备份包），在已联网且已登录 GitHub 的机器上执行：
 
 ```bash
 cd reading-archive-between-the-spines
 
-# 方式 A：gh CLI
+# 方式 1：gh CLI（最简）
 gh auth login            # 若未登录
 gh repo create reading-archive-between-the-spines --public --source . --remote origin --push
 
-# 方式 B：已有远端仓库
+# 方式 2：已有/手动创建的远端仓库
 git remote add origin https://github.com/<你的用户名>/reading-archive-between-the-spines.git
 git branch -M main
 git push -u origin main
 ```
 
 > 仓库名已定为 `reading-archive-between-the-spines`，若名称冲突可自行调整。
-> 注意：本目录含两个视频文件（约 7.5 MB），单文件远小于 GitHub 100 MB 限制，可正常推送。
+> 注意：本目录含两个视频文件（约 13.4 MB），单文件远小于 GitHub 100 MB 限制，可正常推送。
 
 ---
 
