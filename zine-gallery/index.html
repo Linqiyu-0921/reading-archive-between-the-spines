@@ -1,0 +1,1036 @@
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;ARCHIVE 001 — Minimal Zine Poster Collection&lt;/title&gt;
+    &lt;link rel="preconnect" href="https://fonts.googleapis.com"&gt;
+    &lt;link rel="preconnect" href="https://fonts.gstatic.com" crossorigin&gt;
+    &lt;link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&amp;family=Special+Elite&amp;family=JetBrains+Mono:wght@300;400&amp;display=swap" rel="stylesheet"&gt;
+    &lt;style&gt;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --ink-black: #0a0908;
+            --charcoal: #161412;
+            --paper-cream: #f2ede4;
+            --paper-aged: #e8e0d0;
+            --typewriter: #4a4540;
+            --faded: #8a837a;
+            --accent-blue: #1e40af;
+            --accent-yellow: #eab308;
+            --accent-coral: #dc2626;
+            --accent-teal: #0d9488;
+            --transition-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-dramatic: cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: var(--ink-black);
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--paper-cream);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: 
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 100;
+            mix-blend-mode: overlay;
+        }
+
+        .gallery-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: radial-gradient(ellipse at center, var(--charcoal) 0%, var(--ink-black) 70%);
+        }
+
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 50;
+            padding: 2rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .brand {
+            font-family: 'Special Elite', cursive;
+            font-size: 0.75rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--faded);
+        }
+
+        .brand span {
+            color: var(--paper-cream);
+        }
+
+        .chapter-info {
+            text-align: right;
+            font-family: 'Special Elite', cursive;
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            color: var(--faded);
+            text-transform: uppercase;
+        }
+
+        .chapter-info .chapter-num {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.65rem;
+            font-style: italic;
+            letter-spacing: 0.1em;
+            display: block;
+            margin-bottom: 0.3rem;
+            color: var(--typewriter);
+        }
+
+        .hero-title {
+            position: fixed;
+            top: 50%;
+            left: 3rem;
+            transform: translateY(-50%) rotate(-90deg);
+            transform-origin: left center;
+            z-index: 20;
+            pointer-events: none;
+        }
+
+        .hero-title h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 300;
+            font-size: clamp(3rem, 8vw, 7rem);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            line-height: 0.9;
+            white-space: nowrap;
+            color: var(--paper-cream);
+        }
+
+        .hero-title h1 em {
+            font-style: italic;
+            font-weight: 300;
+            color: var(--faded);
+        }
+
+        .hero-title .subtitle {
+            font-family: 'Special Elite', cursive;
+            font-size: 0.65rem;
+            letter-spacing: 0.35em;
+            text-transform: uppercase;
+            color: var(--faded);
+            margin-top: 1rem;
+            padding-left: 0.2rem;
+        }
+
+        .slider-viewport {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            perspective: 1800px;
+            perspective-origin: 50% 50%;
+        }
+
+        .poster-stage {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform-style: preserve-3d;
+        }
+
+        .poster-card {
+            position: absolute;
+            width: 280px;
+            height: 467px;
+            cursor: pointer;
+            transition: all 0.7s var(--transition-smooth);
+            transform-style: preserve-3d;
+            will-change: transform, opacity;
+        }
+
+        .poster-card::before {
+            content: '';
+            position: absolute;
+            inset: -20px;
+            background: radial-gradient(ellipse at center, rgba(0,0,0,0.4) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.5s var(--transition-smooth);
+            z-index: -1;
+            filter: blur(20px);
+        }
+
+        .poster-card.active::before {
+            opacity: 1;
+        }
+
+        .poster-card .poster-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: var(--paper-cream);
+            box-shadow: 
+                0 2px 2px rgba(0,0,0,0.03),
+                0 8px 16px rgba(0,0,0,0.12),
+                0 24px 48px rgba(0,0,0,0.25),
+                0 40px 80px rgba(0,0,0,0.35);
+            overflow: hidden;
+            transition: transform 0.5s var(--transition-smooth), box-shadow 0.5s var(--transition-smooth);
+        }
+
+        .poster-card .poster-wrapper::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: 
+                linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.1) 45%, rgba(255,255,255,0.03) 50%, transparent 55%),
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='paper'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paper)'/%3E%3C/svg%3E");
+            opacity: 0.4;
+            pointer-events: none;
+            mix-blend-mode: multiply;
+        }
+
+        .poster-card.active .poster-wrapper {
+            box-shadow: 
+                0 4px 4px rgba(0,0,0,0.05),
+                0 12px 24px rgba(0,0,0,0.15),
+                0 32px 64px rgba(0,0,0,0.3),
+                0 60px 120px rgba(0,0,0,0.45);
+        }
+
+        .poster-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: contrast(1.02) saturate(0.95);
+            transition: filter 0.5s var(--transition-smooth);
+        }
+
+        .poster-card .poster-info {
+            position: absolute;
+            bottom: -3.5rem;
+            left: 0;
+            right: 0;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.4s var(--transition-smooth);
+            transition-delay: 0s;
+        }
+
+        .poster-card.active .poster-info {
+            opacity: 1;
+            transform: translateY(0);
+            transition-delay: 0.3s;
+        }
+
+        .poster-info .archive-num {
+            font-family: 'Special Elite', cursive;
+            font-size: 0.65rem;
+            letter-spacing: 0.3em;
+            color: var(--faded);
+            text-transform: uppercase;
+        }
+
+        .poster-info .poster-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem;
+            font-style: italic;
+            color: var(--paper-cream);
+            margin-top: 0.3rem;
+            letter-spacing: 0.05em;
+        }
+
+        .side-meta {
+            position: fixed;
+            z-index: 30;
+            font-family: 'Special Elite', cursive;
+            font-size: 0.6rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--faded);
+            line-height: 2;
+        }
+
+        .side-meta.left {
+            bottom: 2rem;
+            left: 3rem;
+        }
+
+        .side-meta.right {
+            bottom: 2rem;
+            right: 3rem;
+            text-align: right;
+        }
+
+        .side-meta .meta-label {
+            color: var(--typewriter);
+            display: block;
+            font-size: 0.55rem;
+            letter-spacing: 0.3em;
+            margin-bottom: 0.2rem;
+        }
+
+        .side-meta .meta-value {
+            color: var(--paper-cream);
+            font-size: 0.7rem;
+        }
+
+        .pagination {
+            position: fixed;
+            bottom: 50%;
+            right: 3rem;
+            transform: translateY(50%);
+            z-index: 40;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            align-items: flex-end;
+        }
+
+        .page-dot {
+            width: 8px;
+            height: 8px;
+            border: 1px solid var(--faded);
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.4s var(--transition-smooth);
+            position: relative;
+        }
+
+        .page-dot::before {
+            content: attr(data-num);
+            position: absolute;
+            right: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem;
+            color: var(--faded);
+            opacity: 0;
+            transition: opacity 0.3s var(--transition-smooth);
+            white-space: nowrap;
+        }
+
+        .page-dot:hover::before,
+        .page-dot.active::before {
+            opacity: 1;
+        }
+
+        .page-dot.active {
+            background: var(--paper-cream);
+            border-color: var(--paper-cream);
+            transform: scale(1.3);
+        }
+
+        .page-dot:hover {
+            border-color: var(--paper-cream);
+        }
+
+        .nav-arrows {
+            position: fixed;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 40;
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-btn {
+            width: 48px;
+            height: 48px;
+            border: 1px solid rgba(242, 237, 228, 0.15);
+            background: transparent;
+            color: var(--faded);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s var(--transition-smooth);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.2rem;
+        }
+
+        .nav-btn:hover {
+            border-color: var(--paper-cream);
+            color: var(--paper-cream);
+            background: rgba(242, 237, 228, 0.05);
+        }
+
+        .counter {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--faded);
+            letter-spacing: 0.2em;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .counter .current {
+            color: var(--paper-cream);
+            font-size: 1rem;
+            font-weight: 300;
+        }
+
+        .detail-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 80;
+            background: rgba(10, 9, 8, 0.92);
+            backdrop-filter: blur(20px);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.6s var(--transition-smooth);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem;
+        }
+
+        .detail-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .detail-close {
+            position: absolute;
+            top: 2rem;
+            right: 2.5rem;
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: transparent;
+            color: var(--faded);
+            cursor: pointer;
+            font-size: 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            transition: color 0.3s;
+            z-index: 10;
+        }
+
+        .detail-close:hover {
+            color: var(--paper-cream);
+        }
+
+        .detail-content {
+            display: grid;
+            grid-template-columns: 340px 1fr;
+            gap: 4rem;
+            max-width: 1000px;
+            width: 100%;
+            align-items: center;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s var(--transition-smooth);
+            transition-delay: 0.1s;
+        }
+
+        .detail-overlay.open .detail-content {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .detail-poster {
+            position: relative;
+        }
+
+        .detail-poster-img {
+            width: 100%;
+            aspect-ratio: 3/5;
+            object-fit: cover;
+            box-shadow: 
+                0 8px 16px rgba(0,0,0,0.2),
+                0 32px 64px rgba(0,0,0,0.4);
+        }
+
+        .detail-paper-edge {
+            position: absolute;
+            inset: 0;
+            box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05);
+            pointer-events: none;
+        }
+
+        .detail-info h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 300;
+            font-size: clamp(2rem, 4vw, 3.5rem);
+            line-height: 1;
+            letter-spacing: 0.02em;
+            margin-bottom: 0.5rem;
+        }
+
+        .detail-info h2 em {
+            font-style: italic;
+            color: var(--faded);
+        }
+
+        .detail-info .detail-archive {
+            font-family: 'Special Elite', cursive;
+            font-size: 0.7rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--faded);
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(242, 237, 228, 0.1);
+        }
+
+        .detail-info .detail-desc {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: rgba(242, 237, 228, 0.75);
+            font-weight: 300;
+            max-width: 420px;
+            margin-bottom: 2rem;
+        }
+
+        .detail-meta-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(242, 237, 228, 0.08);
+        }
+
+        .detail-meta-item .label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--typewriter);
+            margin-bottom: 0.4rem;
+            display: block;
+        }
+
+        .detail-meta-item .value {
+            font-family: 'Special Elite', cursive;
+            font-size: 0.85rem;
+            color: var(--paper-cream);
+            letter-spacing: 0.05em;
+        }
+
+        .swatch {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            margin-right: 8px;
+            vertical-align: middle;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-teal));
+            z-index: 60;
+            transition: width 0.5s var(--transition-smooth);
+            opacity: 0.6;
+        }
+
+        .scroll-hint {
+            position: fixed;
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.55rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--faded);
+            opacity: 0.6;
+            z-index: 35;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; transform: translateX(-50%) translateY(0); }
+            50% { opacity: 0.7; transform: translateX(-50%) translateY(-4px); }
+        }
+
+        @media (max-width: 1024px) {
+            .hero-title {
+                position: relative;
+                left: auto;
+                top: auto;
+                transform: none;
+                text-align: center;
+                padding: 6rem 2rem 2rem;
+            }
+
+            .top-bar {
+                padding: 1.5rem;
+            }
+
+            .side-meta {
+                display: none;
+            }
+
+            .pagination {
+                right: 1.5rem;
+            }
+
+            .detail-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                text-align: center;
+            }
+
+            .detail-poster {
+                max-width: 220px;
+                margin: 0 auto;
+            }
+
+            .detail-info .detail-desc {
+                margin: 0 auto 2rem;
+            }
+
+            .detail-meta-grid {
+                max-width: 300px;
+                margin: 2rem auto 0;
+            }
+
+            .poster-card {
+                width: 220px;
+                height: 367px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .hero-title h1 {
+                font-size: 2.5rem;
+            }
+
+            .chapter-info {
+                display: none;
+            }
+
+            .poster-card {
+                width: 180px;
+                height: 300px;
+            }
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div class="progress-bar" id="progressBar"&gt;&lt;/div&gt;
+
+    &lt;div class="gallery-container"&gt;
+        &lt;header class="top-bar"&gt;
+            &lt;div class="brand"&gt;
+                &lt;span&gt;ZINE&lt;/span&gt; ARCHIVE
+            &lt;/div&gt;
+            &lt;div class="chapter-info"&gt;
+                &lt;span class="chapter-num"&gt;— Chapter One —&lt;/span&gt;
+                Printed Matter
+            &lt;/div&gt;
+        &lt;/header&gt;
+
+        &lt;div class="hero-title"&gt;
+            &lt;h1&gt;QUIET&lt;br&gt;&lt;em&gt;PAPERS&lt;/em&gt;&lt;/h1&gt;
+            &lt;div class="subtitle"&gt;A Minimal Zine Collection&lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;div class="side-meta left"&gt;
+            &lt;span class="meta-label"&gt;Curated by&lt;/span&gt;
+            &lt;span class="meta-value"&gt;gc-minimal&lt;/span&gt;
+            &lt;br&gt;&lt;br&gt;
+            &lt;span class="meta-label"&gt;Series&lt;/span&gt;
+            &lt;span class="meta-value"&gt;v0.1 Edition&lt;/span&gt;
+        &lt;/div&gt;
+
+        &lt;div class="side-meta right"&gt;
+            &lt;span class="meta-label"&gt;Medium&lt;/span&gt;
+            &lt;span class="meta-value"&gt;Risograph&lt;/span&gt;
+            &lt;br&gt;&lt;br&gt;
+            &lt;span class="meta-label"&gt;Year&lt;/span&gt;
+            &lt;span class="meta-value"&gt;MMXXVI&lt;/span&gt;
+        &lt;/div&gt;
+
+        &lt;div class="slider-viewport"&gt;
+            &lt;div class="poster-stage" id="posterStage"&gt;&lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;nav class="pagination" id="pagination"&gt;&lt;/nav&gt;
+
+        &lt;div class="nav-arrows"&gt;
+            &lt;button class="nav-btn" id="prevBtn" aria-label="Previous"&gt;←&lt;/button&gt;
+            &lt;div class="counter"&gt;
+                &lt;span class="current" id="currentNum"&gt;01&lt;/span&gt;
+                &lt;span style="opacity:0.4"&gt; / &lt;/span&gt;
+                &lt;span id="totalNum"&gt;06&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;button class="nav-btn" id="nextBtn" aria-label="Next"&gt;→&lt;/button&gt;
+        &lt;/div&gt;
+
+        &lt;div class="scroll-hint"&gt;drag · scroll · arrows&lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class="detail-overlay" id="detailOverlay"&gt;
+        &lt;button class="detail-close" id="detailClose"&gt;×&lt;/button&gt;
+        &lt;div class="detail-content"&gt;
+            &lt;div class="detail-poster"&gt;
+                &lt;img class="detail-poster-img" id="detailImg" src="" alt=""&gt;
+                &lt;div class="detail-paper-edge"&gt;&lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class="detail-info"&gt;
+                &lt;h2 id="detailTitle"&gt;&lt;/h2&gt;
+                &lt;div class="detail-archive" id="detailArchive"&gt;&lt;/div&gt;
+                &lt;p class="detail-desc" id="detailDesc"&gt;&lt;/p&gt;
+                &lt;div class="detail-meta-grid"&gt;
+                    &lt;div class="detail-meta-item"&gt;
+                        &lt;span class="label"&gt;Accent Color&lt;/span&gt;
+                        &lt;span class="value" id="detailColor"&gt;&lt;/span&gt;
+                    &lt;/div&gt;
+                    &lt;div class="detail-meta-item"&gt;
+                        &lt;span class="label"&gt;Layout&lt;/span&gt;
+                        &lt;span class="value" id="detailLayout"&gt;&lt;/span&gt;
+                    &lt;/div&gt;
+                    &lt;div class="detail-meta-item"&gt;
+                        &lt;span class="label"&gt;Texture&lt;/span&gt;
+                        &lt;span class="value" id="detailTexture"&gt;&lt;/span&gt;
+                    &lt;/div&gt;
+                    &lt;div class="detail-meta-item"&gt;
+                        &lt;span class="label"&gt;Mood&lt;/span&gt;
+                        &lt;span class="value" id="detailMood"&gt;&lt;/span&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;script&gt;
+        const posters = [
+            {
+                id: 1,
+                file: 'night-door.jpeg',
+                title: 'A Door Kept the Night',
+                archive: 'Archive No. 013',
+                date: 'Jul. 11 / 23:08',
+                weather: 'clear',
+                color: { name: 'Cobalt Blue', hex: '#1e40af' },
+                layout: 'Center Fragment',
+                anchor: 'Silhouette + Color Block',
+                texture: 'Xerox Softness',
+                mood: 'Night / Solitude',
+                desc: 'A solitary cobalt rectangle holds a small bird against aged cream paper. The night is a door; light is a rumor whispered through typewriter keys.'
+            },
+            {
+                id: 2,
+                file: 'yellow-step.jpeg',
+                title: 'Yellow Found the Step',
+                archive: 'Archive No. 014',
+                date: 'April / 16:31',
+                weather: 'dry',
+                color: { name: 'Lemon Yellow', hex: '#eab308' },
+                layout: 'Dual Panel',
+                anchor: 'Photo Fragment + Color Block',
+                texture: 'Risograph Grain',
+                mood: 'Afternoon / Quiet',
+                desc: 'A concrete stair fragment meets its geometric echo in vivid yellow. Ordinary architecture, re-seen through the half-tone gaze of a risograph drum.'
+            },
+            {
+                id: 3,
+                file: 'moon-tide.jpeg',
+                title: 'Same Moon, Two Silences',
+                archive: 'Archive No. 003',
+                date: '07.12 / Tide Low',
+                weather: 'humid',
+                color: { name: 'Ocean Teal', hex: '#0d9488' },
+                layout: 'Dual Panel',
+                anchor: 'Tinted Photograph',
+                texture: 'Halftone Degradation',
+                mood: 'Seaside / Memory',
+                desc: 'Lunar surface and ocean share one silver light. Two landscapes breathing the same quiet — a diptych stitched together by a line of Chinese text.'
+            },
+            {
+                id: 4,
+                file: 'pause-map.jpeg',
+                title: 'Pause Map',
+                archive: 'Archive No. 007',
+                date: '—',
+                weather: '—',
+                color: { name: 'Coral Red', hex: '#dc2626' },
+                layout: 'Type-Led',
+                anchor: 'Fragmented Typography',
+                texture: 'Letterpress Ink Bleed',
+                mood: 'Solitude / Contemplation',
+                desc: 'Words drift across paper like coordinates on an uncharted map. The red accent marks not a place, but the pause between destinations.'
+            },
+            {
+                id: 5,
+                file: 'shore-pause.jpeg',
+                title: 'Shore Pause',
+                archive: 'Archive No. 009',
+                date: '—',
+                weather: '—',
+                color: { name: 'Ultramarine', hex: '#3730a3' },
+                layout: 'Lower-Left Float',
+                anchor: 'Tiny Faded Photo',
+                texture: 'Film Grain Photo',
+                mood: 'Seaside / Stillness',
+                desc: 'A small photograph rests low on the page, heavy with the weight of all the empty paper above it. The shore is where the world pauses before beginning again.'
+            },
+            {
+                id: 6,
+                file: 'typhoon-memory.jpeg',
+                title: 'Typhoon Memory',
+                archive: 'Archive No. 021',
+                date: '—',
+                weather: '—',
+                color: { name: 'Pear Green', hex: '#65a30d' },
+                layout: 'Irregular Cutout',
+                anchor: 'Torn-Paper Clipping',
+                texture: 'Aged Paper Mottling',
+                mood: 'Memory / Slight Surrealism',
+                desc: 'Fragments rearranged as weather remembers them. Green pushes through grayscale like vegetation after a storm — disorder softened into pattern.'
+            }
+        ];
+
+        let currentIndex = 0;
+        let isAnimating = false;
+        let startX = 0;
+        let currentX = 0;
+        let isDragging = false;
+
+        const stage = document.getElementById('posterStage');
+        const pagination = document.getElementById('pagination');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const currentNum = document.getElementById('currentNum');
+        const totalNum = document.getElementById('totalNum');
+        const progressBar = document.getElementById('progressBar');
+        const detailOverlay = document.getElementById('detailOverlay');
+        const detailClose = document.getElementById('detailClose');
+
+        function init() {
+            totalNum.textContent = String(posters.length).padStart(2, '0');
+            createPosterCards();
+            createPagination();
+            updateSlider();
+            bindEvents();
+        }
+
+        function createPosterCards() {
+            posters.forEach((poster, index) =&gt; {
+                const card = document.createElement('div');
+                card.className = 'poster-card';
+                card.dataset.index = index;
+                card.innerHTML = `
+                    &lt;div class="poster-wrapper"&gt;
+                        &lt;img src="${poster.file}" alt="${poster.title}" loading="lazy"&gt;
+                    &lt;/div&gt;
+                    &lt;div class="poster-info"&gt;
+                        &lt;div class="archive-num"&gt;${poster.archive}&lt;/div&gt;
+                        &lt;div class="poster-title"&gt;${poster.title}&lt;/div&gt;
+                    &lt;/div&gt;
+                `;
+                card.addEventListener('click', (e) =&gt; {
+                    if (Math.abs(currentX - startX) &lt; 5) {
+                        if (index === currentIndex) {
+                            openDetail(index);
+                        } else {
+                            goTo(index);
+                        }
+                    }
+                });
+                stage.appendChild(card);
+            });
+        }
+
+        function createPagination() {
+            posters.forEach((_, index) =&gt; {
+                const dot = document.createElement('button');
+                dot.className = 'page-dot';
+                dot.dataset.num = String(index + 1).padStart(2, '0');
+                dot.dataset.index = index;
+                dot.addEventListener('click', () =&gt; goTo(index));
+                pagination.appendChild(dot);
+            });
+        }
+
+        function updateSlider() {
+            const cards = stage.querySelectorAll('.poster-card');
+            const dots = pagination.querySelectorAll('.page-dot');
+
+            cards.forEach((card, index) =&gt; {
+                const offset = index - currentIndex;
+                const absOffset = Math.abs(offset);
+                const direction = offset &gt; 0 ? 1 : -1;
+
+                card.classList.toggle('active', index === currentIndex);
+
+                if (absOffset &gt; 3) {
+                    card.style.opacity = '0';
+                    card.style.transform = `translateX(${direction * 600}px) scale(0.6) rotateY(${direction * -45}deg)`;
+                    card.style.zIndex = '0';
+                    card.style.pointerEvents = 'none';
+                } else if (absOffset === 0) {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateX(0) scale(1) rotateY(0deg) translateZ(80px)';
+                    card.style.zIndex = '10';
+                    card.style.pointerEvents = 'auto';
+                } else if (absOffset === 1) {
+                    card.style.opacity = '0.7';
+                    card.style.transform = `translateX(${direction * 200}px) scale(0.82) rotateY(${direction * -25}deg) translateZ(${-20}px)`;
+                    card.style.zIndex = '5';
+                    card.style.pointerEvents = 'auto';
+                } else if (absOffset === 2) {
+                    card.style.opacity = '0.35';
+                    card.style.transform = `translateX(${direction * 330}px) scale(0.68) rotateY(${direction * -38}deg) translateZ(${-60}px)`;
+                    card.style.zIndex = '2';
+                    card.style.pointerEvents = 'auto';
+                } else {
+                    card.style.opacity = '0.15';
+                    card.style.transform = `translateX(${direction * 430}px) scale(0.55) rotateY(${direction * -45}deg) translateZ(${-100}px)`;
+                    card.style.zIndex = '1';
+                    card.style.pointerEvents = 'none';
+                }
+            });
+
+            dots.forEach((dot, index) =&gt; {
+                dot.classList.toggle('active', index === currentIndex);
+            });
+
+            currentNum.textContent = String(currentIndex + 1).padStart(2, '0');
+            progressBar.style.width = `${((currentIndex + 1) / posters.length) * 100}%`;
+        }
+
+        function goTo(index) {
+            if (isAnimating || index === currentIndex) return;
+            isAnimating = true;
+            currentIndex = ((index % posters.length) + posters.length) % posters.length;
+            updateSlider();
+            setTimeout(() =&gt; { isAnimating = false; }, 700);
+        }
+
+        function next() {
+            goTo(currentIndex + 1);
+        }
+
+        function prev() {
+            goTo(currentIndex - 1);
+        }
+
+        function openDetail(index) {
+            const poster = posters[index];
+            document.getElementById('detailImg').src = poster.file;
+            document.getElementById('detailTitle').innerHTML = `${poster.title.split(' ').slice(0, -1).join(' ')} &lt;em&gt;${poster.title.split(' ').slice(-1)[0]}&lt;/em&gt;`;
+            document.getElementById('detailArchive').textContent = `${poster.archive} · ${poster.date} · ${poster.weather}`;
+            document.getElementById('detailDesc').textContent = poster.desc;
+            document.getElementById('detailColor').innerHTML = `&lt;span class="swatch" style="background:${poster.color.hex}"&gt;&lt;/span&gt;${poster.color.name}`;
+            document.getElementById('detailLayout').textContent = poster.layout;
+            document.getElementById('detailTexture').textContent = poster.texture;
+            document.getElementById('detailMood').textContent = poster.mood;
+            detailOverlay.classList.add('open');
+        }
+
+        function closeDetail() {
+            detailOverlay.classList.remove('open');
+        }
+
+        function bindEvents() {
+            prevBtn.addEventListener('click', prev);
+            nextBtn.addEventListener('click', next);
+            detailClose.addEventListener('click', closeDetail);
+            detailOverlay.addEventListener('click', (e) =&gt; {
+                if (e.target === detailOverlay) closeDetail();
+            });
+
+            document.addEventListener('keydown', (e) =&gt; {
+                if (detailOverlay.classList.contains('open')) {
+                    if (e.key === 'Escape') closeDetail();
+                    return;
+                }
+                if (e.key === 'ArrowRight' || e.key === 'ArrowDown') next();
+                if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') prev();
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    openDetail(currentIndex);
+                }
+            });
+
+            const wheelHandler = (e) =&gt; {
+                e.preventDefault();
+                if (isAnimating) return;
+                if (e.deltaY &gt; 30 || e.deltaX &gt; 30) next();
+                else if (e.deltaY &lt; -30 || e.deltaX &lt; -30) prev();
+            };
+
+            stage.parentElement.addEventListener('wheel', wheelHandler, { passive: false });
+
+            stage.parentElement.addEventListener('touchstart', (e) =&gt; {
+                startX = e.touches[0].clientX;
+                currentX = startX;
+                isDragging = true;
+            }, { passive: true });
+
+            stage.parentElement.addEventListener('touchmove', (e) =&gt; {
+                if (!isDragging) return;
+                currentX = e.touches[0].clientX;
+            }, { passive: true });
+
+            stage.parentElement.addEventListener('touchend', () =&gt; {
+                if (!isDragging) return;
+                const diff = currentX - startX;
+                if (Math.abs(diff) &gt; 50) {
+                    if (diff &lt; 0) next();
+                    else prev();
+                }
+                isDragging = false;
+            });
+
+            stage.parentElement.addEventListener('mousedown', (e) =&gt; {
+                startX = e.clientX;
+                currentX = startX;
+                isDragging = true;
+                stage.parentElement.style.cursor = 'grabbing';
+            });
+
+            window.addEventListener('mousemove', (e) =&gt; {
+                if (!isDragging) return;
+                currentX = e.clientX;
+            });
+
+            window.addEventListener('mouseup', () =&gt; {
+                if (!isDragging) return;
+                const diff = currentX - startX;
+                if (Math.abs(diff) &gt; 80) {
+                    if (diff &lt; 0) next();
+                    else prev();
+                }
+                isDragging = false;
+                stage.parentElement.style.cursor = '';
+            });
+        }
+
+        init();
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
