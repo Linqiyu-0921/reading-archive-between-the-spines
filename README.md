@@ -12,6 +12,7 @@
 reading-archive-between-the-spines/
 ├── README.md                       # 本文件（含完整任务记录）
 ├── push.sh                         # 沙箱内一键推送脚本（重新授权后由 AI 执行）
+├── push-with-token.sh              # 接受环境变量 PAT 的推送脚本（用户提供有效 token 时使用）
 ├── site/
 │   ├── bookshelf.html              # 图书展示网站（核心作品）
 │   └── books.js                    # 网站数据（33 本书）
@@ -121,6 +122,8 @@ python3 -m http.server 8000
 1. 打开 **CodeBuddy 设置 → 连接器 → GitHub**，点击「重新授权 / 重新连接」。
 2. 完成后回复「**已重新授权**」。
 3. AI 在沙箱执行 `bash push.sh`：自动获取新 Token → 创建公开仓库 `reading-archive-between-the-spines` → 推送 `main` 分支。
+
+> 若你直接提供一枚有效 PAT（具有 repo 权限），也可跳过连接器重新授权，直接用 `GITHUB_TOKEN='你的PAT' bash push-with-token.sh` 完成推送。
 4. 返回仓库地址 `https://github.com/<你的用户名>/reading-archive-between-the-spines`。
 
 ### 路径 B · 用户本地推送（无需重新授权）
