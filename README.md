@@ -58,8 +58,8 @@ reading-archive-between-the-spines/
 
 ### 阶段 6 · 资产归档与 GitHub 发布
 - 收集全部图片、视频、文档、网站到本目录结构。
-- 初始化本地 git 仓库并提交。
-- ⚠️ **沙盒网络限制**：当前环境出站 HTTPS 被阻断，无法在沙盒内直连 `github.com` 执行 `git push`。仓库已在 GitHub 端创建（见下方「发布说明」），本地仓库已 `commit`，待用户在可联网环境执行推送即可。
+- 初始化本地 git 仓库并提交（36 个文件，commit `58993ad`）。
+- ⚠️ **沙盒网络限制**：当前环境出站 HTTPS 被阻断（`curl` 至 `api.github.com`/`github.com` 均失败），无法在沙盒内直连 GitHub 执行 `git push` 或创建仓库。GitHub 端仓库**尚未创建**，请按下方「发布说明」在本地联网环境创建并推送。
 
 ---
 
