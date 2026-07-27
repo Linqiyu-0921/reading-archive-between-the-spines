@@ -118,6 +118,7 @@ python3 -m http.server 8000
 - 本地 `main` 分支已成功推送（4 个提交、38 个文件）。
 - 仓库体积极小（`.git` 约 15 MB），最大文件 11 MB，远低于 GitHub 100 MB 限制。
 - 推送完成后已立即清除 `.git/config` 中的 token 凭据，无残留。
+- 网站已通过 **GitHub Pages** 部署上线：https://linqiyu-0921.github.io/reading-archive-between-the-spines/ （source: `main` 分支根目录）
 
 ### 路径 A · 用户在 CodeBuddy 重新授权后由 AI 沙箱一键推送（推荐）
 1. 打开 **CodeBuddy 设置 → 连接器 → GitHub**，点击「重新授权 / 重新连接」。
